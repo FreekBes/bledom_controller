@@ -8,7 +8,59 @@
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body>
-		<h1>BLEDOM Controller</h1>
+		<div id="nosupport" style="display: none;">
+			<h1>Bluetooth is not enabled or supported by your web browser</h1>
+			<p>To enable the (experimental) Bluetooth capabilities of your web browser, go to <a href="chrome://flags" target="_blank">chrome://flags</a> and enable the <i>#experimental-web-platform-features</i> flag. Then restart your browser.</i></p>
+			<p>Also make sure to enable the new Web Permissions System, if not done already: <i>#enable-web-bluetooth-new-permissions-backend</i>.</p>
+		</div>
+		<div id="yesyes" style="display: none;">
+			<h1>BLEDOM Controller</h1>
+			<button id="searchBtn" onclick="searchBLEDom()">Connect</button>
+			<div id="controls" style="display: none;">
+				<button id="redBtn" onclick="setColor(255, 0, 0)">Red</button>
+				<button id="greenBtn" onclick="setColor(0, 255, 0)">Green</button>
+				<button id="blueBtn" onclick="setColor(0, 0, 255)">Blue</button>
+				<hr />
+				<input type="color" id="customColorInput" name="customColorInput" value="#123abc" onchange="setColorHex(this.value)" />
+				<hr />
+				<select id="modeSelect" name="modeSelect" onchange="setModeEffect(this.value)">
+					<option value="null" selected disabled>Select an effect</option>
+					<option value="red">Red</option>
+					<option value="green">Green</option>
+					<option value="blue">Blue</option>
+					<option value="yellow">Yellow</option>
+					<option value="cyan">Cyan</option>
+					<option value="magenta">Magenta</option>
+					<option value="white">White</option>
+					<option value="jump_rgb">Jump RGB</option>
+					<option value="jump_rgbycmw">Jump RGBYCMW</option>
+					<option value="gradient_rgb">Fade RGB</option>
+					<option value="gradient_rgbycmw">Fade RGBYCMW</option>
+					<option value="gradient_r">Fade Red</option>
+					<option value="gradient_g">Fade Green</option>
+					<option value="gradient_b">Fade Blue</option>
+					<option value="gradient_y">Fade Yellow</option>
+					<option value="gradient_c">Fade Cyan</option>
+					<option value="gradient_m">Fade Magenta</option>
+					<option value="gradient_w">Fade White</option>
+					<option value="gradient_rg">Fade Red &amp; Green</option>
+					<option value="gradient_rb">Fade Red &amp; Blue</option>
+					<option value="gradient_gb">Fade Green &amp; Blue</option>
+					<option value="blink_rgbycmw">Blink RGBYCMW</option>
+					<option value="blink_r">Blink Red</option>
+					<option value="blink_g">Blink Green</option>
+					<option value="blink_b">Blink Blue</option>
+					<option value="blink_y">Blink Yellow</option>
+					<option value="blink_c">Blink Cyan</option>
+					<option value="blink_m">Blink Magenta</option>
+					<option value="blink_w">Blink White</option>
+				</select>
+			</div>
+		</div>
+		<noscript>
+			<h1>Javascript is required for this webpage to work.</h1>
+			<p>Please enable Javascript in your browser, then reload the page.</p>
+		</noscript>
 		<script src="bt.js"></script>
 	</body>
 </html>
