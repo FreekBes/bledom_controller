@@ -1,41 +1,3 @@
-var loc = window.location.href+'';
-if (loc.indexOf('http://') == 0) {
-	window.location.href = loc.replace('http://','https://');
-}
-
-function hexToRgb(hex) {
-	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	return result ? {
-		r: parseInt(result[1], 16),
-		g: parseInt(result[2], 16),
-		b: parseInt(result[3], 16)
-	} : null;
-}
-
-function limitHex(number) {
-	if (number > 255) {
-		return 255;
-	}
-	else if (number < 0) {
-		return 0;
-	}
-	return number;
-}
-
-function limitPerc(number) {
-	if (number > 100) {
-		return 100;
-	}
-	else if (number < 0) {
-		return 0;
-	}
-	return number;
-}
-
-function rgbToHex(r, g, b) {
-	return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-
 if ('bluetooth' in navigator && 'permissions' in navigator) {
 	document.getElementById("yesyes").style.display = "block";
 }
@@ -177,26 +139,72 @@ function setSensitivityForDynamicMode(sensitivity) {
 	sendCommand(command);
 }
 
-var brightness = 0;
-var lastBrightness = 0;
+var brightness = [0, 0, 0];
+var darkness = [0, 0, 0];
 
 function attackRelease() {
-	var target = 0;
-	var time = 1;
-	if (keyPressed) {
-		target = 100;
-		time = parseFloat(document.getElementById("attack").value);
-	}
-	else {
-		time = parseFloat(document.getElementById("release").value);
-	}
+	// [ R, G, B ]
+	var target = [0, 0, 0];
 	var threshold = 0.001;
-	timeconstant = time * 44100 * 0.001;
-	coeff = Math.pow(1.0 / threshold, -1.0 / timeconstant);
-	brightness = Math.floor((coeff * brightness) + ( ( 1.0 - coeff ) * target));
-	if (brightness != lastBrightness) {
-		setBrightness(brightness);
-		// console.log(brightness);
+	var attack = parseFloat(document.getElementById("attack").value);
+	var release = parseFloat(document.getElementById("release").value);
+	var time = [release, release, release];
+
+	if (!onlyOneKey) {
+		if (keysPressed.indexOf(65) > -1) {
+			target[0] = 255;
+			time[0] = attack;
+		}
+		if (keysPressed.indexOf(83) > -1) {
+			target[1] = 255;
+			time[1] = attack;
+		}
+		if (keysPressed.indexOf(68) > -1) {
+			target[2] = 255;
+			time[2] = attack;
+		}
 	}
-	lastBrightness = brightness;
+	else if (keysPressed.length > 0) {
+		var i = 0;
+		switch (keysPressed[keysPressed.length - 1]) {
+			case 65: {
+				target[0] = 255;
+				time[0] = attack;
+				brightness[1] = 0;
+				brightness[2] = 0;
+				break;
+			}
+			case 83: {
+				target[1] = 255;
+				time[1] = attack;
+				brightness[0] = 0;
+				brightness[2] = 0;
+				break;
+			}
+			case 68: {
+				target[2] = 255;
+				time[2] = attack;
+				brightness[0] = 0;
+				brightness[1] = 0;
+				break;
+			}
+		}
+	}
+
+	var coeff = [0, 0, 0];
+
+	time[0] = time[0] * 44100 * 0.001;
+	time[1] = time[1] * 44100 * 0.001;
+	time[2] = time[2] * 44100 * 0.001;
+	coeff[0] = Math.pow(1.0 / threshold, -1.0 / time[0]);
+	coeff[1] = Math.pow(1.0 / threshold, -1.0 / time[1]);
+	coeff[2] = Math.pow(1.0 / threshold, -1.0 / time[2]);
+	brightness[0] = Math.floor((coeff[0] * brightness[0]) + ((1.0 - coeff[0]) * target[0]));
+	brightness[1] = Math.floor((coeff[1] * brightness[1]) + ((1.0 - coeff[1]) * target[1]));
+	brightness[2] = Math.floor((coeff[2] * brightness[2]) + ((1.0 - coeff[2]) * target[2]));
+	if (!brightness.equals(darkness)) {
+		//setBrightness(brightness);
+		setColor(brightness[0], brightness[1], brightness[2]);
+		//console.log(brightness);
+	}
 }
