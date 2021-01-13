@@ -69,42 +69,54 @@ function searchBLEDom() {
 		char = characteristic;
 		document.getElementById("searchBtn").style.display = "none";
 		document.getElementById("controls").style.display = "block";
+		setInterval(attackRelease, 100);
 	}).catch(function(err) {
 		console.error(err);
 	});
 }
 
+commandInProgress = false;
 function sendCommand(command, onSuccess) {
-	char.writeValue(command).then(function() {
-		console.log("Command written to characteristic");
-		if (typeof onSuccess == 'function') {
-			onSuccess();
-		}
-	}).catch(function(err) {
-		console.error(err);
-	});
+	if (!commandInProgress) {
+		commandInProgress = true;
+		char.writeValue(command).then(function() {
+			console.log("Command written to characteristic");
+			commandInProgress = false;
+			if (typeof onSuccess == 'function') {
+				onSuccess();
+			}
+		}).catch(function(err) {
+			commandInProgress = false;
+			console.error(err);
+		});
+	}
+	else {
+		setTimeout(function() {
+			sendCommand(command, onSuccess)
+		}, 10);
+	}
 }
 
-function setColor(r, g, b) {
+function setColor(r, g, b, onSuccess) {
+	document.getElementById("customColorInput").value = rgbToHex(r, g, b);
+	document.getElementById("modeSelect").value = "null";
+	document.getElementById("dynamicSelect").value = "null";
 	var command = new Uint8Array([0x7e, 0x00, 0x05, 0x03, limitHex(r), limitHex(g), limitHex(b), 0x00, 0xef]).buffer;
-	sendCommand(command, function() {
-		document.getElementById("customColorInput").value = rgbToHex(r, g, b);
-		document.getElementById("modeSelect").value = "null";
-	});
+	sendCommand(command, onSuccess);
 }
 
-function setColorHex(hexColor) {
+function setColorHex(hexColor, onSuccess) {
 	if (hexColor == null || hexColor.trim() == "") {
 		console.warn("Hex color is empty!");
 		return;
 	}
 	var rgbColor = hexToRgb(hexColor);
-	setColor(rgbColor.r, rgbColor.g, rgbColor.b);
+	setColor(rgbColor.r, rgbColor.g, rgbColor.b, onSuccess);
 }
 
-function setBrightness(brightness) {
+function setBrightness(brightness, onSuccess) {
 	var command = new Uint8Array([0x7e, 0x00, 0x01, limitHex(brightness), 0x00, 0x00, 0x00, 0x00, 0xef]).buffer;
-	sendCommand(command);
+	sendCommand(command, onSuccess);
 }
 
 function setEffectSpeed(speed) {
@@ -151,14 +163,98 @@ function setModeEffect(effect) {
 	else {
 		throw new Exception(effect + " is not a valid effect");
 	}
+	document.getElementById("dynamicSelect").value = "null";
 }
 
 function setModeDynamic(dynamic) {
 	var command = new Uint8Array([0x7e, 0x00, 0x03, limitHex(dynamic), 0x04, 0x00, 0x00, 0x00, 0xef]).buffer;
 	sendCommand(command);
+	document.getElementById("modeSelect").value = "null";
 }
 
 function setSensitivityForDynamicMode(sensitivity) {
 	var command = new Uint8Array([0x7e, 0x00, 0x07, limitHex(sensitivity), 0x00, 0x00, 0x00, 0x00, 0xef]).buffer;
 	sendCommand(command);
+}
+
+var brightness = 0;
+var lastBrightness = 0;
+
+function attackRelease() {
+	var target = 0;
+	var time = 1;
+	if (keyPressed) {
+		target = 100;
+		time = parseFloat(document.getElementById("attack").value);
+	}
+	else {
+		time = parseFloat(document.getElementById("release").value);
+	}
+	var threshold = 0.001;
+	timeconstant = time * 44100 * 0.001;
+	coeff = Math.pow(1.0 / threshold, -1.0 / timeconstant);
+	brightness = Math.floor((coeff * brightness) + ( ( 1.0 - coeff ) * target));
+	if (brightness != lastBrightness) {
+		setBrightness(brightness);
+		console.log(brightness);
+	}
+	lastBrightness = brightness;
+}
+
+var attackReleaseStatus = 0;
+var attackInTimeout = null;
+var releaseInTimeout = null;
+var brightness = 0;
+var lastBrightness = 0;
+
+function attackIn(attack, i) {
+	if (releaseInTimeout) {
+		clearTimeout(releaseInTimeout);
+		releaseInTimeout = null;
+		lastBrightness = brightness;
+	}
+	attackReleaseStatus = 1;
+	if (!i) {
+		i = 1;
+		lastBrightness = brightness;
+	}
+	if (attack == 0) {
+		brightness = 255;
+	}
+	else {
+		brightness = lastBrightness + Math.floor(255 * i * attack);
+		i++;
+	}
+	setBrightness(brightness, function() {
+		console.log(brightness);
+		if (brightness < 255 && attackReleaseStatus == 1) {
+			attackInTimeout = setTimeout(function() { attackIn(attack, i) }, 100);
+		}
+	});
+}
+
+function releaseIn(release, i) {
+	if (attackInTimeout) {
+		clearTimeout(attackInTimeout);
+		attackInTimeout = null;
+		lastBrightness = brightness;
+	}
+	attackReleaseStatus = 2;
+	if (!i) {
+		i = 1;
+		lastBrightness = brightness;
+	}
+	if (release == 0) {
+		brightness = 0;
+	}
+	else {
+		brightness = Math.floor(lastBrightness + (-i * release));
+		i++;
+	}
+	setBrightness(brightness, function() {
+		console.log(brightness);
+		if (brightness > 0 && attackReleaseStatus == 2) {
+			releaseInTimeout = setTimeout(function() { releaseIn(release, i) }, 100);
+		}
+	});
 }

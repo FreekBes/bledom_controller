@@ -55,6 +55,18 @@
 					<option value="blink_m">Blink Magenta</option>
 					<option value="blink_w">Blink White</option>
 				</select>
+				<hr />
+				<select id="dynamicSelect" name="dynamicSelect" onchange="setModeDynamic(parseInt(this.value))">
+					<option value="null" selected disabled>Select a dynamic effect</option>
+					<option value="0">Colorful Mode</option>
+					<option value="1">Beat On/Off Mode</option>
+					<option value="2">Beat Color Mode</option>
+					<option value="3">Fast Beat On/Off Mode</option>
+				</select>
+				<hr />
+				<h2>Keyboard Control Options</h2>
+				<input type="range" id="attack" value="0" step="0.01" min="0" max="4" />
+				<input type="range" id="release" value="0.5" step="0.01" min="0" max="4" />
 			</div>
 		</div>
 		<noscript>
@@ -62,5 +74,6 @@
 			<p>Please enable Javascript in your browser, then reload the page.</p>
 		</noscript>
 		<script src="bt.js"></script>
+		<script src="kbd.js"></script>
 	</body>
 </html>
