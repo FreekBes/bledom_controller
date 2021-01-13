@@ -115,7 +115,7 @@ function setColorHex(hexColor, onSuccess) {
 }
 
 function setBrightness(brightness, onSuccess) {
-	var command = new Uint8Array([0x7e, 0x00, 0x01, limitHex(brightness), 0x00, 0x00, 0x00, 0x00, 0xef]).buffer;
+	var command = new Uint8Array([0x7e, 0x00, 0x01, limitPerc(brightness), 0x00, 0x00, 0x00, 0x00, 0xef]).buffer;
 	sendCommand(command, onSuccess);
 }
 
