@@ -196,7 +196,7 @@ function attackRelease() {
 	brightness = Math.floor((coeff * brightness) + ( ( 1.0 - coeff ) * target));
 	if (brightness != lastBrightness) {
 		setBrightness(brightness);
-		console.log(brightness);
+		// console.log(brightness);
 	}
 	lastBrightness = brightness;
 }
