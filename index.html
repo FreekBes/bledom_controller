@@ -67,10 +67,13 @@
 				<hr />
 				<h2>Keyboard Control Options</h2>
 				<input type="range" id="attack" value="0" step="0.01" min="0" max="10" title="Attack" />
-				<input type="range" id="release" value="0.5" step="0.01" min="0" max="4" title="Release" />
+				<input type="range" id="release" value="0.25" step="0.01" min="0" max="4" title="Release" />
 				<input type="range" id="brightness" value="100" step="5" min="0" max="100" title="Brightness" onchange="setBrightness(parseInt(this.value))" onclick="setBrightness(parseInt(this.value))" />
 				<br />
 				<input type="checkbox" id="singleColorEnvelope" value="true" onchange="onlyOneKey = this.checked"/> <label for="singleColorEnvelope">Immediate color transition</label>
+				<br />
+				<button id="midiBtn" onclick="reqMidi();" style="display: none;">Use MIDI keyboard</button>
+				<input type="checkbox" id="useMidiRelease" value="true" onchange="useMidiRelease = this.checked"/> <label for="useMidiRelease">Use MIDI release</label>
 			</div>
 		</div>
 		<noscript>
@@ -78,6 +81,7 @@
 			<p>Please enable Javascript in your browser, then reload the page.</p>
 		</noscript>
 		<script src="bt.js"></script>
+		<script src="midi.js"></script>
 		<script src="kbd.js"></script>
 	</body>
 </html>

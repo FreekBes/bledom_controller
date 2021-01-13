@@ -31,7 +31,10 @@ function searchBLEDom() {
 		char = characteristic;
 		document.getElementById("searchBtn").style.display = "none";
 		document.getElementById("controls").style.display = "block";
-		setInterval(attackRelease, 90);
+		setInterval(attackRelease, 75);
+		if (navigator.requestMIDIAccess) {
+			document.getElementById("midiBtn").style.display = "inline-block";
+		}
 	}).catch(function(err) {
 		console.error(err);
 	});
@@ -138,67 +141,69 @@ var brightness = [0, 0, 0];
 var darkness = [0, 0, 0];
 
 function attackRelease() {
-	// [ R, G, B ]
-	var target = [0, 0, 0];
-	var threshold = 0.001;
-	var attack = parseFloat(document.getElementById("attack").value);
-	var release = parseFloat(document.getElementById("release").value);
-	var time = [release, release, release];
+	if (!midiEnabled || true) {
+		// [ R, G, B ]
+		var target = [0, 0, 0];
+		var threshold = 0.001;
+		var attack = parseFloat(document.getElementById("attack").value);
+		var release = parseFloat(document.getElementById("release").value);
+		var time = [release, release, release];
 
-	if (!onlyOneKey) {
-		if (keysPressed.indexOf(65) > -1) {
-			target[0] = 255;
-			time[0] = attack;
-		}
-		if (keysPressed.indexOf(83) > -1) {
-			target[1] = 255;
-			time[1] = attack;
-		}
-		if (keysPressed.indexOf(68) > -1) {
-			target[2] = 255;
-			time[2] = attack;
-		}
-	}
-	else if (keysPressed.length > 0) {
-		switch (keysPressed[keysPressed.length - 1]) {
-			case 65: {
+		if (!onlyOneKey) {
+			if (keysPressed.indexOf(65) > -1) {
 				target[0] = 255;
 				time[0] = attack;
-				brightness[1] = 0;
-				brightness[2] = 0;
-				break;
 			}
-			case 83: {
+			if (keysPressed.indexOf(83) > -1) {
 				target[1] = 255;
 				time[1] = attack;
-				brightness[0] = 0;
-				brightness[2] = 0;
-				break;
 			}
-			case 68: {
+			if (keysPressed.indexOf(68) > -1) {
 				target[2] = 255;
 				time[2] = attack;
-				brightness[0] = 0;
-				brightness[1] = 0;
-				break;
 			}
 		}
-	}
+		else if (keysPressed.length > 0) {
+			switch (keysPressed[keysPressed.length - 1]) {
+				case 65: {
+					target[0] = 255;
+					time[0] = attack;
+					brightness[1] = 0;
+					brightness[2] = 0;
+					break;
+				}
+				case 83: {
+					target[1] = 255;
+					time[1] = attack;
+					brightness[0] = 0;
+					brightness[2] = 0;
+					break;
+				}
+				case 68: {
+					target[2] = 255;
+					time[2] = attack;
+					brightness[0] = 0;
+					brightness[1] = 0;
+					break;
+				}
+			}
+		}
 
-	var coeff = [0, 0, 0];
+		var coeff = [0, 0, 0];
 
-	time[0] = time[0] * 44100 * 0.001;
-	time[1] = time[1] * 44100 * 0.001;
-	time[2] = time[2] * 44100 * 0.001;
-	coeff[0] = Math.pow(1.0 / threshold, -1.0 / time[0]);
-	coeff[1] = Math.pow(1.0 / threshold, -1.0 / time[1]);
-	coeff[2] = Math.pow(1.0 / threshold, -1.0 / time[2]);
-	brightness[0] = Math.floor((coeff[0] * brightness[0]) + ((1.0 - coeff[0]) * target[0]));
-	brightness[1] = Math.floor((coeff[1] * brightness[1]) + ((1.0 - coeff[1]) * target[1]));
-	brightness[2] = Math.floor((coeff[2] * brightness[2]) + ((1.0 - coeff[2]) * target[2]));
-	if (!brightness.equals(darkness)) {
-		//setBrightness(brightness);
-		setColor(brightness[0], brightness[1], brightness[2]);
-		//console.log(brightness);
+		time[0] = time[0] * 44100 * 0.001;
+		time[1] = time[1] * 44100 * 0.001;
+		time[2] = time[2] * 44100 * 0.001;
+		coeff[0] = Math.pow(1.0 / threshold, -1.0 / time[0]);
+		coeff[1] = Math.pow(1.0 / threshold, -1.0 / time[1]);
+		coeff[2] = Math.pow(1.0 / threshold, -1.0 / time[2]);
+		brightness[0] = Math.floor((coeff[0] * brightness[0]) + ((1.0 - coeff[0]) * target[0]));
+		brightness[1] = Math.floor((coeff[1] * brightness[1]) + ((1.0 - coeff[1]) * target[1]));
+		brightness[2] = Math.floor((coeff[2] * brightness[2]) + ((1.0 - coeff[2]) * target[2]));
+		//if (!brightness.equals(darkness)) {
+			//setBrightness(brightness);
+			setColor(brightness[0], brightness[1], brightness[2]);
+			//console.log(brightness);
+		//}
 	}
 }
