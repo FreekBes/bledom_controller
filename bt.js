@@ -165,7 +165,6 @@ function attackRelease() {
 		}
 	}
 	else if (keysPressed.length > 0) {
-		var i = 0;
 		switch (keysPressed[keysPressed.length - 1]) {
 			case 65: {
 				target[0] = 255;
