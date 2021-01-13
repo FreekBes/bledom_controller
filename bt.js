@@ -69,7 +69,7 @@ function searchBLEDom() {
 		char = characteristic;
 		document.getElementById("searchBtn").style.display = "none";
 		document.getElementById("controls").style.display = "block";
-		setInterval(attackRelease, 10);
+		setInterval(attackRelease, 60);
 	}).catch(function(err) {
 		console.error(err);
 	});
@@ -199,62 +199,4 @@ function attackRelease() {
 		console.log(brightness);
 	}
 	lastBrightness = brightness;
-}
-
-var attackReleaseStatus = 0;
-var attackInTimeout = null;
-var releaseInTimeout = null;
-var brightness = 0;
-var lastBrightness = 0;
-
-function attackIn(attack, i) {
-	if (releaseInTimeout) {
-		clearTimeout(releaseInTimeout);
-		releaseInTimeout = null;
-		lastBrightness = brightness;
-	}
-	attackReleaseStatus = 1;
-	if (!i) {
-		i = 1;
-		lastBrightness = brightness;
-	}
-	if (attack == 0) {
-		brightness = 255;
-	}
-	else {
-		brightness = lastBrightness + Math.floor(255 * i * attack);
-		i++;
-	}
-	setBrightness(brightness, function() {
-		console.log(brightness);
-		if (brightness < 255 && attackReleaseStatus == 1) {
-			attackInTimeout = setTimeout(function() { attackIn(attack, i) }, 100);
-		}
-	});
-}
-
-function releaseIn(release, i) {
-	if (attackInTimeout) {
-		clearTimeout(attackInTimeout);
-		attackInTimeout = null;
-		lastBrightness = brightness;
-	}
-	attackReleaseStatus = 2;
-	if (!i) {
-		i = 1;
-		lastBrightness = brightness;
-	}
-	if (release == 0) {
-		brightness = 0;
-	}
-	else {
-		brightness = Math.floor(lastBrightness + (-i * release));
-		i++;
-	}
-	setBrightness(brightness, function() {
-		console.log(brightness);
-		if (brightness > 0 && attackReleaseStatus == 2) {
-			releaseInTimeout = setTimeout(function() { releaseIn(release, i) }, 100);
-		}
-	});
 }
