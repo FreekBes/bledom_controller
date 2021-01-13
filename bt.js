@@ -31,7 +31,7 @@ function searchBLEDom() {
 		char = characteristic;
 		document.getElementById("searchBtn").style.display = "none";
 		document.getElementById("controls").style.display = "block";
-		setInterval(attackRelease, 60);
+		setInterval(attackRelease, 90);
 	}).catch(function(err) {
 		console.error(err);
 	});
@@ -51,11 +51,6 @@ function sendCommand(command, onSuccess) {
 			commandInProgress = false;
 			console.error(err);
 		});
-	}
-	else {
-		setTimeout(function() {
-			sendCommand(command, onSuccess)
-		}, 10);
 	}
 }
 
