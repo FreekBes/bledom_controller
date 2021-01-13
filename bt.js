@@ -69,7 +69,7 @@ function searchBLEDom() {
 		char = characteristic;
 		document.getElementById("searchBtn").style.display = "none";
 		document.getElementById("controls").style.display = "block";
-		setInterval(attackRelease, 100);
+		setInterval(attackRelease, 10);
 	}).catch(function(err) {
 		console.error(err);
 	});

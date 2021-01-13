@@ -10,17 +10,18 @@ window.addEventListener("keydown", function(e) {
 			console.log("Keycode for KEYDOWN: " + key);
 		}
 
-		keyPressed = true;
-
 		switch(key) {
 			case 65:	// [A]
 				setColor(255, 0, 0);
+				keyPressed = true;
 				break;
 			case 83:	// [S]
 				setColor(0, 255, 0);
+				keyPressed = true;
 				break;
 			case 68:	// [D]
 				setColor(0, 0, 255);
+				keyPressed = true;
 				break;
 			case 116:	// [F5]
 				window.location.reload();
