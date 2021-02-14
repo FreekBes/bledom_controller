@@ -141,7 +141,7 @@ var brightness = [0, 0, 0];
 var darkness = [0, 0, 0];
 
 function attackRelease() {
-	if (!midiEnabled || true) {
+	if (!midiEnabled && useKbd) {
 		// [ R, G, B ]
 		var target = [0, 0, 0];
 		var threshold = 0.001;

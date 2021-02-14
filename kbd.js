@@ -1,6 +1,7 @@
 var keyDebug = false;
 var keysPressed = [];
 var onlyOneKey = false;
+var useKbd = false;
 
 window.addEventListener("keydown", function(e) {
 	if (e.target.type != 'text' && e.target.nodeName != 'TEXTAREA' && e.target.getAttribute("contenteditable") == null) {

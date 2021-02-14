@@ -18,6 +18,7 @@
 			<h1>BLEDOM Controller</h1>
 			<button id="searchBtn" onclick="searchBLEDom()">Connect</button>
 			<div id="controls" style="display: none;">
+				<h2>Default Controls</h2>
 				<button id="redBtn" onclick="setColor(255, 0, 0)">Red</button>
 				<button id="greenBtn" onclick="setColor(0, 255, 0)">Green</button>
 				<button id="blueBtn" onclick="setColor(0, 0, 255)">Blue</button>
@@ -65,7 +66,16 @@
 					<option value="3">Fast Beat On/Off Mode</option>
 				</select>
 				<hr />
+				<h2>Automatic Controls</h2>
+				<input type="checkbox" id="automaticcontrol" value="true" onchange="autoControl = this.checked; autoLooper();" /> <label for="automaticcontrol">Enabled</label><br />
+				<input type="number" min="1" max="200" step="1" id="bpm" value="138" placeholder="BPM" onkeydown="if(event.key==='.'){event.preventDefault();}" oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,''); setBPM(parseInt(this.value));" /><br />
+				<select id="autotype" name="autotype" onchange="setAutoType(parseInt(this.value))">
+					<option value="null" selected disabled>Select automatic effect</option>
+					<option value="0">Test</option>
+				</select>
+				<hr />
 				<h2>Keyboard Control Options</h2>
+				<input type="checkbox" id="usekbd" value="true" onchange="useKbd = this.checked" /> <label for="usekbd">Enabled</label><br />
 				<input type="range" id="attack" value="0" step="0.01" min="0" max="10" title="Attack" />
 				<input type="range" id="release" value="0.25" step="0.01" min="0" max="4" title="Release" />
 				<input type="range" id="brightness" value="100" step="5" min="0" max="100" title="Brightness" onchange="setBrightness(parseInt(this.value))" onclick="setBrightness(parseInt(this.value))" />
@@ -83,5 +93,6 @@
 		<script src="bt.js"></script>
 		<script src="midi.js"></script>
 		<script src="kbd.js"></script>
+		<script src="auto.js"></script>
 	</body>
 </html>
