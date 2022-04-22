@@ -65,8 +65,14 @@
 					<option value="2">Beat Color Mode</option>
 					<option value="3">Fast Beat On/Off Mode</option>
 				</select>
+
 				<hr />
-				<h2>Automatic Controls</h2>
+				<h2>Capture System Audio</h2>
+				<button id="captureAudioBtn" onclick="startCapture(this);">Use system audio</button>
+				<canvas id="visualizer"></canvas>
+				<hr />
+
+				<h2>Pre-defined Controls</h2>
 				<input type="checkbox" id="automaticcontrol" value="true" onchange="autoControl = this.checked; autoLooper();" /> <label for="automaticcontrol">Enabled</label><br />
 				<input type="number" min="1" max="200" step="1" id="bpm" value="138" placeholder="BPM" onkeydown="if(event.key==='.'){event.preventDefault();}" oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,''); setBPM(parseInt(this.value));" /><br />
 				<select id="autotype" name="autotype" onchange="setAutoType(parseInt(this.value))">
@@ -74,6 +80,7 @@
 					<option value="0">Test</option>
 				</select>
 				<hr />
+
 				<h2>Keyboard Control Options</h2>
 				<input type="checkbox" id="usekbd" value="true" onchange="useKbd = this.checked" /> <label for="usekbd">Enabled</label><br />
 				<input type="range" id="attack" value="0" step="0.01" min="0" max="10" title="Attack" />
@@ -94,5 +101,6 @@
 		<script src="midi.js"></script>
 		<script src="kbd.js"></script>
 		<script src="auto.js"></script>
+		<script src="input.js"></script>
 	</body>
 </html>

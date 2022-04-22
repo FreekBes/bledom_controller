@@ -45,7 +45,7 @@ function sendCommand(command, onSuccess) {
 	if (!commandInProgress) {
 		commandInProgress = true;
 		char.writeValue(command).then(function() {
-			console.log("Command written to characteristic");
+			// console.log("Command written to characteristic");
 			commandInProgress = false;
 			if (typeof onSuccess == 'function') {
 				onSuccess();
