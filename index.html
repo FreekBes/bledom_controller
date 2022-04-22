@@ -70,10 +70,12 @@
 				<h2>Capture System Audio</h2>
 				<button id="captureAudioBtn" onclick="startCapture(this);">Use system audio</button>
 				<br />
-				<input title="Beat Bar Selection" type="range" min="0" max="12" value="0" step="1" onchange="drawer.beatBar = parseInt(this.value);">
-				<input title="Lowpass Filter" type="range" min="4" max="32" value="32" step="1" onchange="recorder.filter.frequency.value = parseInt(this.value);">
-				<input title="Threshold" type="range" min="0" max="128" value="100" step="1" onchange="drawer.threshold = parseInt(this.value);">
-				<input title="Amount of bars to take into account" type="range" min="1" max="32" value="8" step="1" onchange="drawer.bars = parseInt(this.value);">
+				<input id="bbselect" title="Beat Bar Selection" type="range" min="0" max="12" value="0" step="1" onchange="drawer.beatBar = parseInt(this.value);">
+				<input id="lpfilter" title="Lowpass Filter" type="range" min="4" max="32" value="32" step="1" onchange="recorder.filter.frequency.value = parseInt(this.value);">
+				<input id="threshold" title="Threshold" type="range" min="0" max="128" value="100" step="1" onchange="drawer.threshold = parseInt(this.value);">
+				<input id="baramount" title="Amount of bars to take into account" type="range" min="1" max="32" value="8" step="1" onchange="drawer.bars = parseInt(this.value);">
+				<br />
+				<button id="filterresetbtn" onclick="resetFilters();">Reset filters</button>
 				<canvas id="visualizer"></canvas>
 				<hr />
 

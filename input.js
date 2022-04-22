@@ -58,6 +58,18 @@ var drawer = {
 	}
 };
 
+function resetFilters() {
+	drawer.beatBar = 2;
+	recorder.filter.frequency.value = 32;
+	drawer.threshold = 100;
+	drawer.bars = 8;
+
+	document.getElementById("bbselect").value = drawer.beatBar;
+	document.getElementById("lpfilter").value = recorder.filter.frequency.value;
+	document.getElementById("threshold").value = drawer.threshold;
+	document.getElementById("baramount").value = drawer.bars;
+}
+
 async function startCapture(button) {
 	try {
 		// cannot only capture audio, so video needs to be captured as well
@@ -79,7 +91,6 @@ async function startCapture(button) {
 			// create filters
 			recorder.filter = recorder.audioContext.createBiquadFilter();
 			recorder.filter.type = "lowpass";
-			recorder.filter.frequency.value = 32;
 			recorder.gainNode = recorder.audioContext.createGain();
 			recorder.gainNode.value = 1;
 
@@ -97,11 +108,9 @@ async function startCapture(button) {
 				drawer.canvas.setAttribute("width", window.innerWidth);
 				drawer.canvas.setAttribute("height", window.innerHeight);
 			});
+			resetFilters();
 			drawer.context = drawer.canvas.getContext("2d");
-			drawer.beatBar = 2;
-			drawer.bars = 8;
 			drawer.fpsInterval = 1000 / 15;
-			drawer.threshold = 100;
 			drawer.lastFrameTime = Date.now();
 			drawer.drawVisuals = requestAnimationFrame(drawer.draw);
 
