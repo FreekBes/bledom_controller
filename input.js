@@ -59,7 +59,7 @@ var drawer = {
 };
 
 function resetFilters() {
-	drawer.beatBar = 2;
+	drawer.beatBar = 0;
 	recorder.filter.frequency.value = 32;
 	drawer.threshold = 100;
 	drawer.bars = 8;
