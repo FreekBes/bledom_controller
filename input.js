@@ -37,12 +37,12 @@ var drawer = {
 			// var bPerc = 0.13 * Math.pow((Math.ceil(recorder.dataArray[drawer.beatBar] / 255 * 100) - 70), 2);
 			// var bPerc = recorder.dataArray[drawer.beatBar] - 50;
 			var bPerc = 0;
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i < drawer.bars; i++) {
 				if (recorder.dataArray[drawer.beatBar + i] > 0) {
 					bPerc += recorder.dataArray[drawer.beatBar + i];
 				}
 			}
-			bPerc = bPerc / 4 - drawer.reducer;
+			bPerc = bPerc / drawer.bars - drawer.threshold;
 			// console.log(recorder.dataArray[drawer.beatBar] + " becomes " + Math.ceil(recorder.dataArray[drawer.beatBar] / 255 * 100) + " becomes " + bPerc);
 			if (char != null) {
 				if (recorder.dataArray[drawer.beatBar] > 0) {
@@ -79,7 +79,7 @@ async function startCapture(button) {
 			// create filters
 			recorder.filter = recorder.audioContext.createBiquadFilter();
 			recorder.filter.type = "lowpass";
-			recorder.filter.frequency.value = 8;
+			recorder.filter.frequency.value = 32;
 			recorder.gainNode = recorder.audioContext.createGain();
 			recorder.gainNode.value = 1;
 
@@ -99,8 +99,9 @@ async function startCapture(button) {
 			});
 			drawer.context = drawer.canvas.getContext("2d");
 			drawer.beatBar = 2;
+			drawer.bars = 8;
 			drawer.fpsInterval = 1000 / 15;
-			drawer.reducer = 0;
+			drawer.threshold = 100;
 			drawer.lastFrameTime = Date.now();
 			drawer.drawVisuals = requestAnimationFrame(drawer.draw);
 
