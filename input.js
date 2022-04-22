@@ -35,7 +35,14 @@ var drawer = {
 			// var bPerc = 1.8 * Math.ceil(recorder.dataArray[drawer.beatBar] / 255 * 100) - 80;
 			// var bPerc = 3.5 * Math.ceil(recorder.dataArray[drawer.beatBar] / 255 * 100) - 250;
 			// var bPerc = 0.13 * Math.pow((Math.ceil(recorder.dataArray[drawer.beatBar] / 255 * 100) - 70), 2);
-			var bPerc = recorder.dataArray[drawer.beatBar] - 50;
+			// var bPerc = recorder.dataArray[drawer.beatBar] - 50;
+			var bPerc = 0;
+			for (i = 0; i < 4; i++) {
+				if (recorder.dataArray[drawer.beatBar + i] > 0) {
+					bPerc += recorder.dataArray[drawer.beatBar + i];
+				}
+			}
+			bPerc = bPerc / 4 - drawer.reducer;
 			// console.log(recorder.dataArray[drawer.beatBar] + " becomes " + Math.ceil(recorder.dataArray[drawer.beatBar] / 255 * 100) + " becomes " + bPerc);
 			if (char != null) {
 				if (recorder.dataArray[drawer.beatBar] > 0) {
@@ -93,6 +100,7 @@ async function startCapture(button) {
 			drawer.context = drawer.canvas.getContext("2d");
 			drawer.beatBar = 2;
 			drawer.fpsInterval = 1000 / 15;
+			drawer.reducer = 0;
 			drawer.lastFrameTime = Date.now();
 			drawer.drawVisuals = requestAnimationFrame(drawer.draw);
 

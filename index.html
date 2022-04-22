@@ -69,6 +69,10 @@
 				<hr />
 				<h2>Capture System Audio</h2>
 				<button id="captureAudioBtn" onclick="startCapture(this);">Use system audio</button>
+				<br />
+				<input title="Beat Bar Selection" type="range" min="0" max="12" value="0" step="1" onchange="drawer.beatBar = parseInt(this.value);">
+				<input title="Lowpass Filter" type="range" min="4" max="32" value="8" step="1" onchange="recorder.filter.frequency.value = parseInt(this.value);">
+				<input title="Reducer" type="range" min="0" max="100" value="0" step="1" onchange="drawer.reducer = parseInt(this.value);">
 				<canvas id="visualizer"></canvas>
 				<hr />
 
