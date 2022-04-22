@@ -5,6 +5,10 @@ else {
 	document.getElementById("nosupport").style.display = "block";
 }
 
+var brightness = [0, 0, 0];
+var darkness = [0, 0, 0];
+var rgbColor = {r: 255, g: 0, b: 0};
+
 function onDisconnected(event) {
 	const device = event.target;
 	console.log(`Device ${device.name} is disconnected.`);
@@ -35,6 +39,7 @@ function searchBLEDom() {
 		if (navigator.requestMIDIAccess) {
 			document.getElementById("midiBtn").style.display = "inline-block";
 		}
+		setColor(rgbColor.r, rgbColor.g, rgbColor.b);
 	}).catch(function(err) {
 		console.error(err);
 	});
@@ -70,7 +75,7 @@ function setColorHex(hexColor, onSuccess) {
 		console.warn("Hex color is empty!");
 		return;
 	}
-	var rgbColor = hexToRgb(hexColor);
+	rgbColor = hexToRgb(hexColor);
 	setColor(rgbColor.r, rgbColor.g, rgbColor.b, onSuccess);
 }
 
@@ -136,9 +141,6 @@ function setSensitivityForDynamicMode(sensitivity) {
 	var command = new Uint8Array([0x7e, 0x00, 0x07, limitHex(sensitivity), 0x00, 0x00, 0x00, 0x00, 0xef]).buffer;
 	sendCommand(command);
 }
-
-var brightness = [0, 0, 0];
-var darkness = [0, 0, 0];
 
 function attackRelease() {
 	if (!midiEnabled && useKbd) {

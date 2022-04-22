@@ -21,7 +21,7 @@ var drawer = {
 		drawer.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 		for (var i = 0; i < recorder.bufferLength; i++) {
 			barHeight = recorder.dataArray[i] * Math.floor(window.innerHeight / 142);
-			drawer.context.fillStyle = 'rgb(18, ' + (recorder.dataArray[i] + 64) + ',64)';
+			drawer.context.fillStyle = 'rgba(' + rgbColor.r + ', ' + rgbColor.g + ', ' + rgbColor.b + ', ' + (recorder.dataArray[i] / 128) + ')';
 			drawer.context.fillRect(x, window.innerHeight - barHeight / 2, barWidth, barHeight);
 			drawer.context.fillRect(window.innerWidth - x - barWidth, window.innerHeight - barHeight / 2, barWidth, barHeight);
 			x += barWidth + 1;
